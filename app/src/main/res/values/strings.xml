@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AppEventos</string>
+
+    <!-- MAIN ACTIVITY -->
+
+    <string name="events">Events</string>
+    <string name="favs">Favourite Events</string>
+    <string name="my_events">My Events</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="others">Others</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

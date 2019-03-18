@@ -81,6 +81,14 @@ class MainActivity : AppCompatActivity() {
 
         drawerClickStatus = false
 
+        navHeader.menuToggle.setOnClickListener {
+            val menu = binding.nv.menu
+            if(drawerClickStatus) {
+                menu.setGroupVisible(R.id.nav_menu_1, true)
+                menu.setGroupVisible(R.id.nav_menu_2, true)
+            }
+            drawerClickStatus = !drawerClickStatus
+        }
         binding.nv.setNavigationItemSelectedListener { item ->
            when(item.itemId) {
               /* R.id.nav_events -> {

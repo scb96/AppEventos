@@ -9,6 +9,8 @@
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="others">Others</string>
+    <string name="close_session">Close Session</string>
+    <string name="user">User</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

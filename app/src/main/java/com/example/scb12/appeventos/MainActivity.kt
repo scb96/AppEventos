@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
+import com.example.scb12.appeventos.fragments.EventsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,9 +32,9 @@ class MainActivity : AppCompatActivity() {
     private var currentDrawerItemID: Int = 0
     private var drawerClickStatus: Boolean = false
 
-   /* private val eventsFragment: EventsFragment by lazy {
+    private val eventsFragment: EventsFragment by lazy {
         EventsFragment.newInstance(EventsFragment.Companion.EventsType.Events)
-    }*/
+    }
 
     /* private val eventsFragment: FavsFragment by lazy {
         FavsFragment.newInstance(FavsFragment.Companion.FavsType.Favs)
@@ -91,11 +92,12 @@ class MainActivity : AppCompatActivity() {
         }
         binding.nv.setNavigationItemSelectedListener { item ->
            when(item.itemId) {
-              /* R.id.nav_events -> {
+               R.id.nav_events -> {
                    if (currentDrawerItemID != ACTION_EVENTS) {
                        loadFragment(ACTION_EVENTS)
-                   } true
-               }*/
+                   }
+                   true
+               }
 
                /* R.id.nav_favs -> {
                    if (currentDrawerItemID != ACTION_FAVS) {
@@ -114,6 +116,7 @@ class MainActivity : AppCompatActivity() {
                        loadFragment(ACTION_ABOUT)
                    } true
                }*/
+           else -> { true }
            }
         }
 
@@ -131,12 +134,12 @@ class MainActivity : AppCompatActivity() {
         clearBackStack()
         this.currentDrawerItemID = currentDrawerItemID
         when(currenDrawerItemID) {
-           /* ACTION_EVENTS -> {
+            ACTION_EVENTS -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, eventsFragment, R.string.events)
+                    .replace(R.id.clMain, eventsFragment, getString(R.string.events))
                     .commit()
-            }*/
+            }
 
             /*ACTION_FAVS -> {
                 supportFragmentManager

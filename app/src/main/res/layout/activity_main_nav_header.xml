@@ -21,19 +21,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:text="EMAIL"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" tools:text="EMAIL"/>
 
         <TextView
                 android:id="@+id/header_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:text="FULL NAME"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintBottom_toTopOf="@id/header_details"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent" tools:text="FULL NAME"/>
 
       <!--  <android.support.v4.widget.CircleImageView
                 android:id="@+id/userImage"
@@ -53,7 +51,7 @@
                 android:focusable="false"
                 android:padding="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent" app:srcCompat="@drawable/ic_power_off"/>
                 <!-- app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" /> -->
 
     </android.support.constraint.ConstraintLayout>

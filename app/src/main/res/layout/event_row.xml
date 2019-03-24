@@ -5,7 +5,7 @@
 
     <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
         <TextView
                 android:layout_width="wrap_content"
@@ -15,8 +15,9 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" app:srcCompat="@android:drawable/sym_def_app_icon"
-                android:id="@+id/ivEvent" android:layout_marginTop="8dp"
+                android:id="@+id/ivEvent" android:layout_marginTop="12dp"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="10dp" app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="8dp"/>
         <TextView
                 android:layout_width="wrap_content"
@@ -26,14 +27,20 @@
                 tools:text="DD/MM/YYYY"/>
         <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_star_not_checked"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/fav_icon"
                 android:id="@+id/ivFav" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" android:layout_marginTop="16dp"
+                android:layout_marginEnd="12dp" android:layout_marginTop="16dp"
                 app:layout_constraintTop_toTopOf="parent"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="17dp" android:id="@+id/tvName" tools:text="NAME"
                 android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ivEvent" android:layout_marginStart="8dp"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_star_checked"
+                android:id="@+id/ivFavChecked" android:visibility="invisible" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="12dp" android:layout_marginTop="16dp"
+                app:layout_constraintTop_toTopOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

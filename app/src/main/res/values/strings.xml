@@ -14,6 +14,8 @@
     <string name="others">Others</string>
     <string name="close_session">Close Session</string>
     <string name="user">User</string>
+    <string name="free">FREE</string>
+    <string name="not_free">NOT FREE</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

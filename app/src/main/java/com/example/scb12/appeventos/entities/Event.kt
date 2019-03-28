@@ -1,3 +1,13 @@
 package com.example.scb12.appeventos.entities
 
-data class Event(val id: Long, val name: String)
+data class Event(var id: String,
+                 var name: String,
+                 var startDate: String,
+                 var finishDate: String,
+                 var url: String,
+                 var logoId: String,
+                 var logoUrl: String,
+                 var venueId: String,
+                 var categoryId: String,
+                 var isFree: String
+                 )

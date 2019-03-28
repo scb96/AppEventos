@@ -1,30 +1,37 @@
 package com.example.scb12.appeventos.adapters
 
+import android.content.res.Resources
+import android.graphics.Color
+import android.provider.Settings.Global.getString
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.scb12.appeventos.R
+import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.fragments.EventsFragment
 import kotlinx.android.synthetic.main.event_row.view.*
+import org.jetbrains.anko.backgroundColor
 import kotlin.collections.ArrayList
 
 
 class EventsAdapter(
     val fragment: EventsFragment,
-    var items: ArrayList<String>
+    var items: ArrayList<Event>
 ) : RecyclerView.Adapter<EventViewHolder>() {
 
-    var rowItems: ArrayList<String> = ArrayList()
-    var rowItemsCopy: ArrayList<String> = ArrayList(
-        items.filterIsInstance<String>()
+    var rowItems: ArrayList<Event> = ArrayList()
+    var rowItemsCopy: ArrayList<Event> = ArrayList(
+        items.filterIsInstance<Event>()
     )
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    fun addItems(rowItems: ArrayList<String>) {
+    fun addItems(rowItems: ArrayList<Event>) {
         this.rowItems.addAll(rowItems)
         this.rowItemsCopy.addAll(rowItems)
     }
@@ -36,16 +43,41 @@ class EventsAdapter(
         val count = itemCount
         notifyItemRangeRemoved(start, count)
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         return EventViewHolder(LayoutInflater.from(fragment.context).inflate(R.layout.event_row, parent, false))
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        val position = holder.adapterPosition
+        val holder = holder as EventViewHolder
+        val event = items[position]
+        //val binding = holder.binding
+        //holder.tvName.text = items[position]
+        holder.tvName.text = event.name
+        holder.tvName.movementMethod = ScrollingMovementMethod()
 
-        holder.tvName.text = items[position]
+        val date = event.startDate.substring(0, event.startDate.length - 4).replace("T", "  ")
 
-         val img = holder.ivFav
-         val imgC = holder.ivFavC
+        holder.tvDate.text = date
+        holder.tvDate.append("h")
+
+        if (event.isFree == "true") {
+            holder.tvGenre.text = " FREE "//Resources.getSystem().getString(R.string.free)
+            holder.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.free)
+            //holder.tvGenre.backgroundColor = Color.GREEN
+            //holder.tvGenre.setBackgroundColor(Color.GREEN)
+        } else { holder.tvGenre.text = ""
+         /*   holder.tvGenre.text = "NOT FREE"//Resources.getSystem().getString(R.string.not_free)
+            holder.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.not_free)*/
+//            holder.tvGenre.setBackgroundColor(Color.RED)
+            //holder.tvGenre.backgroundColor = Color.RED
+
+        }
+
+
+        val img = holder.ivFav
+        val imgC = holder.ivFavC
         img.setOnClickListener {
             img.visibility = View.INVISIBLE
             imgC.visibility = View.VISIBLE
@@ -60,26 +92,28 @@ class EventsAdapter(
     fun filter(text: String) {
         var text = text
         items.clear()
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             items.addAll(rowItemsCopy)
         } else {
             text = text.toLowerCase()
-            for(item in rowItemsCopy) { //FILTRO POR NOMBRE
-                if(item.toLowerCase().contains(text)) {
+            for (item in rowItemsCopy) { //FILTRO POR NOMBRE
+                if (item.name.toLowerCase().contains(text)) {
                     items.add(item)
                 }
                 //FILTRO POR ARTISTA
             }
+
+            notifyDataSetChanged()
         }
-        notifyDataSetChanged()
     }
+
 }
-
-
-class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val tvName = view.tvName
-    val ivFav = view.ivFav
-    val ivFavC = view.ivFavChecked
+    class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvName = view.tvName
+        val tvDate = view.tvDate
+        val tvGenre = view.tvGenre
+        val ivFav = view.ivFav
+        val ivFavC = view.ivFavChecked
 /*
 class EventsAdapter(
     val fragment: EventsFragment,
@@ -141,4 +175,4 @@ class EventsAdapter(
     override fun getItemCount(): Int {
         return items.size
     }*/
-}
+    }

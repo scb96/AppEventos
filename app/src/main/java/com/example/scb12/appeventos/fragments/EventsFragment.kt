@@ -98,10 +98,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         activity = getActivity() as MainActivity
-        loadData()
-
-
-
     }
 
     private fun loadData() {
@@ -110,7 +106,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
             null, object : com.android.volley.Response.Listener<JSONObject> {
                 override fun onResponse(response: JSONObject?) {
                     val jsonArray = response?.getJSONArray("events")
-                    for(i in 0..(jsonArray!!.length() - 1)) {
+                    for(i in 0..(jsonArray!!.length() - 1)){
                         val jsonObject = jsonArray.getJSONObject(i)
                         val event = Event(
                             jsonObject!!.getString("id"),
@@ -122,12 +118,12 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                             jsonObject.getJSONObject("logo").getString("url"),
                             jsonObject.getString("venue_id"),
                             jsonObject.getString("category_id"),
-                            jsonObject.getString("is_free")
+                            jsonObject.getString("is_free"),
+                            jsonObject.getJSONObject("description").getString("text")
                             )
                         eventList.add(event)
                         mAdapter.addItems(eventList)
                         rv.adapter = mAdapter
-
                     }
                 }
             }, object : com.android.volley.Response.ErrorListener {
@@ -172,6 +168,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     }*/
 
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -187,6 +184,9 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         activity.binding.abl.visibility = View.GONE
         activity.binding.nsv.visibility = View.GONE
         activity.setTitle(R.string.events)
+
+        loadData()
+
 
         arguments?.let {
             eventsType = EventsType.valueOf(it.getString(TYPE)!!)

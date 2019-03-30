@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">AppEventos</string>
 
-    <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="appbar_scrolling_view_behavior" translatable="false">
+        android.support.design.widget.AppBarLayout$ScrollingViewBehavior
+    </string>
 
 
     <!-- MAIN ACTIVITY -->
@@ -26,5 +28,15 @@
     <string name="search_menu">Search</string>
     <string name="filter_menu">Filter</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- EVENT DETAIL -->
+    <string name="start_date">START DATE: </string>
+    <string name="finish_date">FINISH DATE: </string>
+    <string name="location">LOCATION: </string>
+    <string name="address">ADDRESS: </string>
+    <string name="view_map">View Map</string>
+    <string name="buy_tickets">BUY TICKETS</string>
 
 </resources>

@@ -6,4 +6,5 @@
     <color name="yellowStar">#FFFF00</color>
     <color name="free_green">#0CEA0C</color>
     <color name="not_free_red">#FF0000</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

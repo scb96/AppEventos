@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/fav"
-        android:title="@string/favs"
-        android:icon="@drawable/fav_icon" />
+            android:id="@+id/fav"
+            android:title="@string/favs"
+            android:icon="@drawable/ic_star_not_checked"
+            android:checkable="true"
+            android:orderInCategory="100"
+            app:showAsAction="ifRoom"
+            android:visible="true"/>
+    <item
+            android:id="@+id/favChecked"
+            android:title="@string/favs"
+            android:icon="@drawable/ic_star_checked"
+            android:checkable="true"
+            android:orderInCategory="100"
+            app:showAsAction="ifRoom"
+            android:visible="false"/>
 </menu>

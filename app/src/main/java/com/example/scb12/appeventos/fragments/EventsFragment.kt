@@ -101,12 +101,12 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun loadData() {
-        val requestQueue = Volley.newRequestQueue(activity)
-        val objectRequest = JsonObjectRequest(com.android.volley.Request.Method.GET, url,
-            null, object : com.android.volley.Response.Listener<JSONObject> {
-                override fun onResponse(response: JSONObject?) {
+        doAsync {
+            val requestQueue = Volley.newRequestQueue(activity)
+            val objectRequest = JsonObjectRequest(com.android.volley.Request.Method.GET, url,
+                null, com.android.volley.Response.Listener<JSONObject> { response ->
                     val jsonArray = response?.getJSONArray("events")
-                    for(i in 0..(jsonArray!!.length() - 1)){
+                    for (i in 0..(jsonArray!!.length() - 1)) {
                         val jsonObject = jsonArray.getJSONObject(i)
                         val event = Event(
                             jsonObject!!.getString("id"),
@@ -120,19 +120,18 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                             jsonObject.getString("category_id"),
                             jsonObject.getString("is_free"),
                             jsonObject.getJSONObject("description").getString("text")
-                            )
-                        eventList.add(event)
-                        mAdapter.addItems(eventList)
-                        rv.adapter = mAdapter
+                        )
+                        uiThread {
+                            eventList.add(event)
+                            mAdapter.addItems(eventList)
+                            rv.adapter = mAdapter
+                        }
                     }
-                }
-            }, object : com.android.volley.Response.ErrorListener {
-                override fun onErrorResponse(error: VolleyError?) {
-                    Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show()
-                }
-            })
-        requestQueue.add(objectRequest)
+                },
+                com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+            requestQueue.add(objectRequest)
 
+        }
     }
 
        /* val queue: RequestQueue = Volley.newRequestQueue(activity)

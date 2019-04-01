@@ -1,6 +1,7 @@
 package com.example.scb12.appeventos.adapters
 
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.provider.Settings.Global.getString
 import android.support.v4.content.ContextCompat
@@ -9,6 +10,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.databinding.EventRowBinding
 import com.example.scb12.appeventos.entities.Event
@@ -17,6 +19,10 @@ import com.example.scb12.appeventos.fragments.EventsFragment
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.event_row.view.*
 import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import java.net.HttpURLConnection
+import java.net.URL
 import kotlin.collections.ArrayList
 
 
@@ -85,6 +91,8 @@ class EventsAdapter(
 
         }
 
+        loadImage(event.logoUrl, binding.ivEvent)
+
 
         val img = binding.ivFav
         val imgC = binding.ivFavChecked
@@ -135,6 +143,17 @@ class EventsAdapter(
         }
     }
 
+    private fun loadImage(url: String, image: ImageView) {
+        doAsync{
+            val imageUrl = URL(url)
+            val conn: HttpURLConnection = imageUrl.openConnection() as HttpURLConnection
+            conn.connect()
+            val bitmap = BitmapFactory.decodeStream(conn.inputStream)
+            uiThread {
+                image.setImageBitmap(bitmap)
+            }
+        }
+    }
 }
    /* class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvName = view.tvName

@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v7.app.ActionBarDrawerToggle
 import android.text.method.ScrollingMovementMethod
 import android.view.*
@@ -23,6 +24,10 @@ import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.entities.Location
 import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.UI
+import org.jetbrains.anko.support.v4.find
+import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -41,11 +46,12 @@ class EventDetailFragment : Fragment() {
     lateinit var binding: FragmentEventDetailBinding private set
     lateinit var activity: MainActivity private set
     private lateinit var drawerToggle: ActionBarDrawerToggle
-    lateinit var eventGson: String
+    private lateinit var eventGson: String
     private lateinit var event: Event
     private lateinit var compositeDisposable: CompositeDisposable
     private lateinit var locationUrl: String
     private lateinit var location: Location
+    private lateinit var menu: Menu
 
         companion object {
         fun newInstance(param1: String) =
@@ -75,7 +81,7 @@ class EventDetailFragment : Fragment() {
         event = gson.fromJson(eventGson, Event::class.java)
         locationUrl = "https://www.eventbriteapi.com/v3/venues/" + event.venueId + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
         loadLocation()
-        //loadImage(event.logoUrl)
+        loadImage(event.logoUrl)
 
 
         //BINDINGS
@@ -137,52 +143,67 @@ class EventDetailFragment : Fragment() {
         }
     }
 
-    fun loadLocation() {
+    private fun loadLocation() {
         val requestQueue = Volley.newRequestQueue(activity)
         val objectRequest = JsonObjectRequest(Request.Method.GET, locationUrl,
-            null, object : Response.Listener<JSONObject> {
-                override fun onResponse(response: JSONObject?) {
-                    val jsonObject = response?.getJSONObject("address")
-                     location = Location(
-                        jsonObject!!.getString("city"),
-                        jsonObject.getString("country"),
-                        jsonObject.getString("latitude"),
-                        jsonObject.getString("longitude"),
-                        jsonObject.getString("region"),
-                        jsonObject.getString("localized_address_display")
-                    )
+            null, Response.Listener<JSONObject> { response ->
+                val jsonObject = response?.getJSONObject("address")
+                location = Location(
+                    jsonObject!!.getString("city"),
+                    jsonObject.getString("country"),
+                    jsonObject.getString("latitude"),
+                    jsonObject.getString("longitude"),
+                    jsonObject.getString("region"),
+                    jsonObject.getString("localized_address_display")
+                )
 
-                    binding.tvLocation.text = location.city
-                    binding.tvLocation.append(", ")
-                    binding.tvLocation.append(location.country)
+                binding.tvLocation.text = location.city
+                binding.tvLocation.append(", ")
+                binding.tvLocation.append(location.country)
 
-                    binding.tvAddress.text = location.address
-                    binding.tvAddress.movementMethod = ScrollingMovementMethod()
-                }
-
-        }, object : com.android.volley.Response.ErrorListener {
-            override fun onErrorResponse(error: VolleyError?) {
-                Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show()
-            }
-        })
+                binding.tvAddress.text = location.address
+                binding.tvAddress.movementMethod = ScrollingMovementMethod()
+            }, Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
         requestQueue.add(objectRequest)
 
     }
 
-  /*  fun loadImage(url: String) {
-        val imageUrl = URL(url)
-        val conn: HttpURLConnection = imageUrl.openConnection() as HttpURLConnection
-        conn.connect()
-        val image = BitmapFactory.decodeStream(conn.getInputStream())
-        binding.imageView.setImageBitmap(image)
+    // TODO: ESTO TIENE QUE IR EN OTRO HILO
+
+   private fun loadImage(url: String) {
+            doAsync{
+                val imageUrl = URL(url)
+                val conn: HttpURLConnection = imageUrl.openConnection() as HttpURLConnection
+                conn.connect()
+                val image = BitmapFactory.decodeStream(conn.inputStream)
+                uiThread {
+                    binding.imageView.setImageBitmap(image)
+                }
+            }
     }
-*/
-   /* override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu., menu)
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_event_detail, menu)
+        this.menu = menu!!
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val favChecked = menu.findItem(R.id.favChecked)
+        val favNotChecked = menu.findItem(R.id.fav)
+        when(item!!.itemId) {
+            R.id.fav -> {
+                favNotChecked.isVisible = false
+                favChecked.isVisible = true
+                //TODO: AÑADIR A FAVORITOS
+            }
+
+            R.id.favChecked -> {
+                favChecked.isVisible = false
+                favNotChecked.isVisible = true
+                //TODO: ELIMINAR DE FAVORITOS
+            }
+        }
         return super.onOptionsItemSelected(item)
-    }*/
+    }
 }

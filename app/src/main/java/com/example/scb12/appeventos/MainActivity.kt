@@ -1,5 +1,6 @@
 package com.example.scb12.appeventos
 
+import android.content.Context
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
@@ -52,6 +53,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        val prefs = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putBoolean("LOGIN", true)
+        editor.apply()
+
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

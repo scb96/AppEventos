@@ -45,4 +45,9 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
 
+    <string name="username_fail">Username is not correct</string>
+    <string name="password_fail">Password is not correct</string>
+
+    <string name="user_not_exists">The user not exists</string>
+
 </resources>

@@ -23,8 +23,6 @@ import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.adapters.EventsAdapter
 import com.example.scb12.appeventos.databinding.FragmentEventsBinding
 import com.example.scb12.appeventos.entities.Event
-import com.example.scb12.appeventos.entities.GetData
-import com.example.scb12.appeventos.entities.Request
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

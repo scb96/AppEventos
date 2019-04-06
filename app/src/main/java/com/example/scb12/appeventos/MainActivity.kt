@@ -1,6 +1,8 @@
 package com.example.scb12.appeventos
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
@@ -8,9 +10,11 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import com.example.scb12.appeventos.activities.LoginActivity
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
 import com.example.scb12.appeventos.fragments.EventsFragment
+import kotlinx.android.synthetic.main.activity_main_nav_header.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         setSupportActionBar(binding.tb)
@@ -125,6 +130,23 @@ class MainActivity : AppCompatActivity() {
                }*/
            else -> { true }
            }
+        }
+
+        val name = intent.extras?.getString("NAME")
+        val lastName = intent.extras?.getString("LASTNAME")
+        val username = intent.extras?.getString("USERNAME")
+
+        navHeader.name.setText("$name $lastName")
+        navHeader.username.text = username
+
+        navHeader.closeSession.setOnClickListener {
+            val prefs = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            editor.putBoolean("LOGIN", false)
+            editor.apply()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         if(savedInstanceState == null) {

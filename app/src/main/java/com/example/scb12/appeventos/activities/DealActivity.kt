@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.scb12.appeventos.MainActivity
 import com.example.scb12.appeventos.R
+import com.example.scb12.appeventos.database.SQLiteHelperConection
 import io.reactivex.disposables.CompositeDisposable
 
 class DealActivity : AppCompatActivity() {
@@ -16,6 +17,9 @@ class DealActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         compositeDisposable = CompositeDisposable()
+
+        val conn: SQLiteHelperConection = SQLiteHelperConection(this, "bd_appEventos", null, 1)
+
     }
 
     override fun onPostResume() {

@@ -1,6 +1,7 @@
 package com.example.scb12.appeventos.activities
 
 import android.content.ContentValues
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -27,6 +28,11 @@ class RegisterActivity : AppCompatActivity() {
             password = etPassword.text.toString()
 
             registerUser()
+        }
+
+        link_login.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 

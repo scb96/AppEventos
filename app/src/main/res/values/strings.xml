@@ -50,4 +50,10 @@
 
     <string name="user_not_exists">The user not exists</string>
 
+    <string name="register">Don\'t have an account? Sign up.</string>
+
+    <string name="name_hint">Name</string>
+    <string name="last_hint">Last name</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_member">Already a member? Sign in.</string>
 </resources>

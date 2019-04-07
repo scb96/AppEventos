@@ -5,6 +5,8 @@ import android.content.Intent
 import android.database.Cursor
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.widget.Toast
 import com.example.scb12.appeventos.MainActivity
 import com.example.scb12.appeventos.R
@@ -12,6 +14,7 @@ import com.example.scb12.appeventos.Utils.Utils
 import com.example.scb12.appeventos.database.SQLiteHelperConection
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.internal.Util
+import org.jetbrains.anko.onClick
 
 class LoginActivity : AppCompatActivity() {
 

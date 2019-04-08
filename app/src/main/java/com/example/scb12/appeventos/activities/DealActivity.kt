@@ -8,6 +8,7 @@ import com.example.scb12.appeventos.MainActivity
 import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.database.SQLiteHelperConection
 import io.reactivex.disposables.CompositeDisposable
+import java.lang.Exception
 
 class DealActivity : AppCompatActivity() {
 
@@ -16,6 +17,8 @@ class DealActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_deal)
+
         compositeDisposable = CompositeDisposable()
 
         val conn: SQLiteHelperConection = SQLiteHelperConection(this, "bd_appEventos", null, 1)
@@ -26,14 +29,24 @@ class DealActivity : AppCompatActivity() {
         super.onPostResume()
         val prefs = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
         val log = prefs.getBoolean("LOGIN", false)
+        val background = object : Thread(){
+            override fun run() {
+                try {
+                    Thread.sleep(3000)
 
-        if(log) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        } else {
-            val loginIntent = Intent(this, LoginActivity::class.java)
-            startActivity(loginIntent)
+                    if(log) {
+                        val intent = Intent(baseContext, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        val loginIntent = Intent(baseContext, LoginActivity::class.java)
+                        startActivity(loginIntent)
+                    }
+                } catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }
         }
+        background.start()
     }
        /* if(!::logged.isInitialized || logged == "") {
             val loginIntent = Intent(this, LoginActivity::class.java)

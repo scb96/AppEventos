@@ -7,4 +7,9 @@
         android:layout_height="match_parent"
         tools:context=".activities.DealActivity">
 
+        <ImageView android:src="@mipmap/logo"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:scaleType="centerInside" />
+
 </android.support.constraint.ConstraintLayout>

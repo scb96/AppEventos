@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true" android:id="@+id/scroll_login">
 
     <LinearLayout
             android:orientation="vertical"
@@ -10,13 +10,13 @@
             android:layout_height="wrap_content"
             android:paddingTop="56dp"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp">
+            android:paddingRight="24dp" android:id="@+id/linear_login">
 
-        <!--<ImageView android:src="@drawable/logo"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="72dp"-->
-        <!--android:layout_marginBottom="24dp"-->
-        <!--android:layout_gravity="center_horizontal" />-->
+        <ImageView android:src="@mipmap/logo"
+                   android:layout_width="wrap_content"
+                   android:layout_height="72dp"
+                   android:layout_marginBottom="24dp"
+                   android:layout_gravity="center_horizontal"/>
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -24,11 +24,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp">
-            <android.support.design.widget.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/etUsername"
-                    android:hint="@string/username"/>
+            <EditText android:id="@+id/etUsername"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:hint="@string/username"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->

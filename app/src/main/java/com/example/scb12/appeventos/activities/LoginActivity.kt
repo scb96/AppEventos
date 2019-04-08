@@ -1,5 +1,6 @@
 package com.example.scb12.appeventos.activities
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -7,12 +8,17 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
+import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.scb12.appeventos.MainActivity
 import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.Utils.Utils
 import com.example.scb12.appeventos.database.SQLiteHelperConection
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.delay
 import okhttp3.internal.Util
 import org.jetbrains.anko.onClick
 
@@ -22,10 +28,16 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
+//        val progressBar = ProgressBar(this)
+//        progressBar.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+//        val linearLayout = findViewById<LinearLayout>(R.id.linear_login)
+//        linearLayout?.addView(progressBar)
 
         bLogin.setOnClickListener {
+
+//            progressBar.visibility = View.VISIBLE
             checkUser()
+//            progressBar.visibility = View.GONE
            /* */
         }
         bRegister.setOnClickListener {

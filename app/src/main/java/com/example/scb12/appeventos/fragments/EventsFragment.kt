@@ -47,6 +47,8 @@ import java.io.IOException
 import java.net.URL
 import java.util.concurrent.Executors
 import com.android.volley.*
+import com.example.scb12.appeventos.entities.Category
+import org.jetbrains.anko.support.v4.uiThread
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,6 +82,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     lateinit var binding: FragmentEventsBinding private set
     private lateinit var eventsType: EventsType
     private val client = OkHttpClient()
+    private lateinit var category: Category
 
     val items: ArrayList<String> = ArrayList()
     val jsonItems: ArrayList<String> = ArrayList()
@@ -96,6 +99,8 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         activity = getActivity() as MainActivity
+
+
     }
 
     private fun loadData() {
@@ -117,7 +122,8 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                             jsonObject.getString("venue_id"),
                             jsonObject.getString("category_id"),
                             jsonObject.getString("is_free"),
-                            jsonObject.getJSONObject("description").getString("text")
+                            jsonObject.getJSONObject("description").getString("text"),
+                            false
                         )
                         uiThread {
                             eventList.add(event)
@@ -270,5 +276,24 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         return true
     }
 
+     fun getCategory(id: String) {
+        val url = "https://www.eventbriteapi.com/v3/categories/" + id + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
 
+        doAsync {
+            val requestQueue = Volley.newRequestQueue(activity)
+            val objectRequest = JsonObjectRequest(Request.Method.GET, url,
+                null, com.android.volley.Response.Listener<JSONObject> { response ->
+                    val name = response?.getString("name")
+                    val id = response?.getString("id")
+                    category = Category(
+                       id.toString(), name.toString()
+                    )
+                    mAdapter.addCategory(category)
+
+                }, com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+            requestQueue.add(objectRequest)
+        }
+
+
+     }
 }

@@ -11,8 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.android.volley.toolbox.Volley
 import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.databinding.EventRowBinding
+import com.example.scb12.appeventos.entities.Category
 import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.fragments.EventDetailFragment
 import com.example.scb12.appeventos.fragments.EventsFragment
@@ -35,6 +37,8 @@ class EventsAdapter(
     var rowItemsCopy: ArrayList<Event> = ArrayList(
         items.filterIsInstance<Event>()
     )
+
+    private var category: Category? = null
 
     override fun getItemCount(): Int {
         return items.size
@@ -73,28 +77,47 @@ class EventsAdapter(
         binding.tvName.text = event.name
         binding.tvName.movementMethod = ScrollingMovementMethod()
 
-        val date = event.startDate.substring(0, event.startDate.length - 4).replace("T", "  ")
+        val date = event.startDate.substring(0, event.startDate.length - 10)//.replace("T", "  ")
 
         binding.tvDate.text = date
-        binding.tvDate.append("h")
+        //binding.tvDate.append("h")
 
         if (event.isFree == "true") {
-            binding.tvGenre.text = " FREE "//Resources.getSystem().getString(R.string.free)
-            binding.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.free)
+            binding.ivFree.visibility = View.VISIBLE
+            //binding.tvGenre.text = " FREE "//Resources.getSystem().getString(R.string.free)
+            // binding.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.free)
             //holder.tvGenre.backgroundColor = Color.GREEN
             //holder.tvGenre.setBackgroundColor(Color.GREEN)
-        } else { binding.tvGenre.text = ""
-         /*   holder.tvGenre.text = "NOT FREE"//Resources.getSystem().getString(R.string.not_free)
+        } else {
+            binding.ivFree.visibility = View.GONE
+        }
+
+            // binding.tvGenre.text = ""
+            /*   holder.tvGenre.text = "NOT FREE"//Resources.getSystem().getString(R.string.not_free)
             holder.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.not_free)*/
 //            holder.tvGenre.setBackgroundColor(Color.RED)
             //holder.tvGenre.backgroundColor = Color.RED
 
+        event.isFav = binding.bFav.isChecked
+
+        binding.bFav.setOnClickListener {
+            if(binding.bFav.isChecked) {
+                event.isFav = false
+                // TODO: SE BORRA DE FAVORITOS
+
+            } else {
+                event.isFav = true
+                //TODO: SE AÑADE A FAVORITOS
+            }
         }
 
         loadImage(event.logoUrl, binding.ivEvent)
+        fragment.getCategory(event.categoryId)
+
+        binding.tvGenre.text = category?.name
 
 
-        val img = binding.ivFav
+        /*  val img = binding.ivFav
         val imgC = binding.ivFavChecked
         img.setOnClickListener {
             img.visibility = View.INVISIBLE
@@ -104,9 +127,9 @@ class EventsAdapter(
         imgC.setOnClickListener {
             imgC.visibility = View.INVISIBLE
             img.visibility = View.VISIBLE
-        }
+        }*/
 
-        if(!binding.root.hasOnClickListeners()) {
+        if (!binding.root.hasOnClickListeners()) {
             binding.root.setOnClickListener {
                 val clickedPosition = holder.adapterPosition
                 val clickedItem = items[clickedPosition]
@@ -132,11 +155,10 @@ class EventsAdapter(
             items.addAll(rowItemsCopy)
         } else {
             text = text.toLowerCase()
-            for (item in rowItemsCopy) { //FILTRO POR NOMBRE
+            for (item in rowItemsCopy) {
                 if (item.name.toLowerCase().contains(text)) {
                     items.add(item)
                 }
-                //FILTRO POR ARTISTA
             }
 
             notifyDataSetChanged()
@@ -144,7 +166,7 @@ class EventsAdapter(
     }
 
     private fun loadImage(url: String, image: ImageView) {
-        doAsync{
+        doAsync {
             val imageUrl = URL(url)
             val conn: HttpURLConnection = imageUrl.openConnection() as HttpURLConnection
             conn.connect()
@@ -154,74 +176,11 @@ class EventsAdapter(
             }
         }
     }
+
+    fun addCategory(category: Category) {
+        this.category = category
+    }
 }
-   /* class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.tvName
-        val tvDate = view.tvDate
-        val tvGenre = view.tvGenre
-        val ivFav = view.ivFav
-        val ivFavC = view.ivFavChecked
-    }*/
+
 class EventViewHolder(val binding: EventRowBinding) : RecyclerView.ViewHolder(binding.root)
-/*
-class EventsAdapter(
-    val fragment: EventsFragment,
-    var items: ArrayList<Any>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    companion object {
-        const val TAG: String = "EventsAdapter"
-    }
-
-    private var rowItems: ArrayList<String> = ArrayList()
-
-    val rowItemCount: Int get() = rowItems.size
-
-    fun addRowItems(rowItems: ArrayList<String>) {
-        this.rowItems.addAll(rowItems)
-        addAll(rowItems.toMutableList<Any>() as ArrayList<Any>)
-    }
-
-    fun clear() {
-        rowItems.clear()
-        val start = 0
-        val count = itemCount
-        notifyItemRangeRemoved(start, count)
-    }
-
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(p0.context)
-                val binding = EventRowBinding.inflate(
-                    inflater,
-                    p0,
-                    false
-                )
-                return EventsViewHolder(binding)
-
-    }
-
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-        val position = p0.adapterPosition
-        val holder = p0 as EventsViewHolder
-        val event = items[position] as String
-        val binding = holder.binding
-
-        binding.tvName.text = event
-        binding.tvDate.text = "22/03/2019"
-        binding.tvGenre.text = "Género"
-        binding.ivFav.setOnClickListener {
-           val img = binding.ivFav
-           if(img.drawable == Drawable.createFromPath("@drawable/ic_star_checked")) {
-               img.setImageDrawable(Drawable.createFromPath("@drawable/ic_star_not_checked"))
-           }
-
-           if(img.drawable == Drawable.createFromPath("@drawable/ic_star_not_checked")) {
-               img.setImageDrawable(Drawable.createFromPath("@drawable/ic_star_checked"))
-           }
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
-    }*/
 

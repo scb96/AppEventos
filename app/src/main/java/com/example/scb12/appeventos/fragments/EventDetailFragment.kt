@@ -168,8 +168,6 @@ class EventDetailFragment : Fragment() {
 
     }
 
-    // TODO: ESTO TIENE QUE IR EN OTRO HILO
-
    private fun loadImage(url: String) {
             doAsync{
                 val imageUrl = URL(url)
@@ -185,6 +183,10 @@ class EventDetailFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_event_detail, menu)
         this.menu = menu!!
+        if(event.isFav) {
+            menu.findItem(R.id.favChecked).isVisible = true
+            menu.findItem(R.id.fav).isVisible = false
+        }
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -195,12 +197,14 @@ class EventDetailFragment : Fragment() {
             R.id.fav -> {
                 favNotChecked.isVisible = false
                 favChecked.isVisible = true
+                event.isFav = true
                 //TODO: AÑADIR A FAVORITOS
             }
 
             R.id.favChecked -> {
                 favChecked.isVisible = false
                 favNotChecked.isVisible = true
+                event.isFav = false
                 //TODO: ELIMINAR DE FAVORITOS
             }
         }

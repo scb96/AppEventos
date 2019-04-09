@@ -12,5 +12,6 @@ data class Event(var id: String,
                  var venueId: String,
                  var categoryId: String,
                  var isFree: String,
-                 var description: String
+                 var description: String,
+                 var isFav: Boolean
                  )

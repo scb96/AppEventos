@@ -179,9 +179,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         activity.binding.abl.visibility = View.GONE
         activity.binding.nsv.visibility = View.GONE
         activity.setTitle(R.string.events)
-        println("PRIMER LOGGGGGGGGGGGGGGGGGGGGGGGG")
-//        loadData()
-        println("SEGUNDO LOGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
         mAdapter.addItems(eventList)
         rv.adapter = mAdapter
         arguments?.let {

@@ -20,10 +20,7 @@ import com.example.scb12.appeventos.activities.LoginActivity
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
 import com.example.scb12.appeventos.entities.Event
-import com.example.scb12.appeventos.fragments.AboutFragment
-import com.example.scb12.appeventos.fragments.EventsFragment
-import com.example.scb12.appeventos.fragments.FavsFragment
-import com.example.scb12.appeventos.fragments.SettingsFragment
+import com.example.scb12.appeventos.fragments.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_nav_header.*
 import kotlinx.android.synthetic.main.fragment_events.*
@@ -64,9 +61,9 @@ class MainActivity : AppCompatActivity() {
         FavsFragment.newInstance(FavsFragment.Companion.FavsType.Favs, favsList)
     }
 
-    /* private val eventsFragment: MyEventsFragment by lazy {
+     private val myEventsFragment: MyEventsFragment by lazy {
         MyEventsFragment.newInstance(MyEventsFragment.Companion.MyEventsType.MyEvents)
-    }*/
+    }
 
     private val settingsFragment: SettingsFragment by lazy {
         SettingsFragment.newInstance(SettingsFragment.Companion.SettingsType.Settings)

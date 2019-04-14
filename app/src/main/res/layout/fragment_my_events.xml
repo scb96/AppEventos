@@ -31,7 +31,7 @@
                 android:src="@drawable/ic_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clickable="true" android:id="@+id/floatingActionButton" app:layout_anchorGravity="right|bottom"
+                android:clickable="true" android:id="@+id/fabAdd" app:layout_anchorGravity="right|bottom"
                 app:layout_anchor="@+id/srl" app:fabSize="normal" android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"/>
     </android.support.design.widget.CoordinatorLayout>

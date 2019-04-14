@@ -1,6 +1,7 @@
 package com.example.scb12.appeventos.entities
 
 import java.io.FileDescriptor
+import java.io.Serializable
 
 data class Event(var id: String,
                  var name: String,
@@ -14,4 +15,4 @@ data class Event(var id: String,
                  var isFree: String,
                  var description: String,
                  var isFav: Boolean
-                 )
+                 ): Serializable

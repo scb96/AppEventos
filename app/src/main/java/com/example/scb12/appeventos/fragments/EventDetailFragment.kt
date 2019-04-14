@@ -2,9 +2,11 @@ package com.example.scb12.appeventos.fragments
 
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat.getDrawable
@@ -116,6 +118,14 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
             builder.setView(dialogView)
             val dialog = builder.create()
             dialog.show()
+        }
+
+        binding.bTickets.setOnClickListener {
+
+                val url = event.url
+                val uri: Uri = Uri.parse(url)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
         }
 
         //BINDINGS

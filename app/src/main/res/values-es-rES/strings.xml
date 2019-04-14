@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AppEventos</string>
+    <string name="app_name">What you want</string>
     <string name="events">Eventos</string>
     <string name="favs">Eventos Favoritos</string>
     <string name="my_events">Mis Eventos</string>

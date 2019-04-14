@@ -185,7 +185,7 @@ class FavsFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     fun getCategory(id: String) {
-        val url = "https://www.eventbriteapi.com/v3/categories/" + id + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
+        val url = "https://www.eventbriteapi.com/v3/categories/$id/?token=EGCNBKQRZWJAAPOFDFVJ&"
 
         doAsync {
             val requestQueue = Volley.newRequestQueue(activity)

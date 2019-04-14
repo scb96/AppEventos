@@ -48,7 +48,7 @@ class RegisterActivity : AppCompatActivity() {
         values.put(Utils().PASSWORD_FIELD, password)
 
         val res = db.insert(Utils().TABLE_USERS, Utils().USERNAME_FIELD, values)
-        Toast.makeText(this, "USUARIO " + res + "REGISTRADO", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "USUARIO REGISTRADO CORRECTAMENTE", Toast.LENGTH_LONG).show()
         db.close()
         finish()
 

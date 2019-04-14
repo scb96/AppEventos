@@ -13,6 +13,10 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyABOSGZkaqQQ8AQmRr7vWt-bUXd6E9Xraw"/>
+
         <activity
                 android:name=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -35,6 +39,10 @@
         <activity android:name=".activities.LoginActivity">
         </activity>
         <activity android:name=".activities.RegisterActivity">
+        </activity>
+        <activity
+                android:name=".activities.SettingsActivity"
+                android:label="@string/title_activity_settings">
         </activity>
     </application>
 

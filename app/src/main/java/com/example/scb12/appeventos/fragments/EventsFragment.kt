@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.Contacts
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.text.TextUtils.indexOf
 import android.view.*
@@ -91,7 +92,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val url = "https://www.eventbriteapi.com/v3/events/search/?search_type=name&token=EGCNBKQRZWJAAPOFDFVJ&" /*"https://api.songkick.com/api/3.0/events/37063834.json?apikey=jWEZBlabQchuiZTC"*/
 
-    val mAdapter: EventsAdapter by lazy{
+     val mAdapter: EventsAdapter by lazy{
         EventsAdapter(this, eventList)
     }
 
@@ -99,7 +100,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         activity = getActivity() as MainActivity
-
 
     }
 
@@ -125,14 +125,15 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                             jsonObject.getJSONObject("description").getString("text"),
                             false
                         )
+
+                        eventList.add(event)
                         uiThread {
-                            eventList.add(event)
                             mAdapter.addItems(eventList)
-                            rv.adapter = mAdapter
+                            binding.rv.adapter = mAdapter
                         }
                     }
                 },
-                com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+                com.android.volley.Response.ErrorListener {})
             requestQueue.add(objectRequest)
 
         }
@@ -188,7 +189,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         activity.binding.nsv.visibility = View.GONE
         activity.setTitle(R.string.events)
 
-        loadData()
 
 
         arguments?.let {
@@ -221,10 +221,13 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                 binding.srl.isRefreshing = false
             }
         }
+        binding.rv.adapter = mAdapter
+        loadData()
 
-       /* if(mAdapter.rowItemCount == 0) {
-            rellenar()
-        }*/
+
+        /* if(mAdapter.rowItemCount == 0) {
+             rellenar()
+         }*/
 
        // binding.rv.adapter = mAdapter
     }
@@ -240,6 +243,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
             i++
         }*/
         //mAdapter.addItems(items)
+
 
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -262,6 +266,133 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+/*
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        var id = ""
+        when(item!!.itemId) {
+            R.id.filter_community -> {
+                id = "113"
+                loadEvents(id)
+            }
+
+            R.id.filter_arts -> {
+                id = "105"
+                loadEvents(id)
+            }
+
+            R.id.filter_science -> {
+                id = "102"
+                loadEvents(id)
+            }
+
+            R.id.filter_film -> {
+                id = "104"
+                loadEvents(id)
+            }
+
+            R.id.filter_music -> {
+                id = "103"
+                loadEvents(id)
+            }
+
+            R.id.filter_food -> {
+                id = "110"
+                loadEvents(id)
+            }
+
+            R.id.filter_hobbies -> {
+                id = "119"
+                loadEvents(id)
+            }
+
+            R.id.filter_sports -> {
+                id = "108"
+                loadEvents(id)
+            }
+
+            R.id.filter_health -> {
+                id = "107"
+                loadEvents(id)
+            }
+
+            R.id.filter_home -> {
+                id = "117"
+                loadEvents(id)
+            }
+
+            R.id.filter_fashion -> {
+                id = "106"
+                loadEvents(id)
+            }
+
+            R.id.filter_holiday -> {
+                id = "116"
+                loadEvents(id)
+            }
+
+            R.id.filter_travel -> {
+                id = "109"
+                loadEvents(id)
+            }
+
+            R.id.filter_auto -> {
+                id = "118"
+                loadEvents(id)
+            }
+
+            R.id.filter_family-> {
+                id = "115"
+                loadEvents(id)
+            }
+
+            R.id.filter_school -> {
+                id = "120"
+                loadEvents(id)
+            }
+
+            R.id.filter_charity -> {
+                id = "111"
+                loadEvents(id)
+            }
+
+            R.id.filter_spirituality -> {
+                id = "114"
+                loadEvents(id)
+            }
+
+            R.id.filter_business -> {
+                id = "101"
+                loadEvents(id)
+            }
+
+            R.id.filter_government -> {
+                id = "112"
+                loadEvents(id)
+            }
+
+            R.id.filter_other -> {
+                id = "199"
+                loadEvents(id)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+*/
+
+   /* private fun loadEvents(id: String) {
+        mAdapter.clear()
+        val rv = activity.findViewById<RecyclerView>(R.id.rv)
+        val events: ArrayList<Event> = ArrayList()
+        for(i in eventList) {
+            if(i.categoryId == id) {
+                events.add(i)
+            }
+        }
+      //  eventList.clear()
+        mAdapter.addItems(events)
+        mAdapter.notifyDataSetChanged()
+    }*/
+
     override fun onQueryTextSubmit(p0: String?): Boolean {
         if(p0 != null) {
             mAdapter.filter(p0)
@@ -277,23 +408,35 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
      fun getCategory(id: String) {
-        val url = "https://www.eventbriteapi.com/v3/categories/" + id + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
+        val url = "https://www.eventbriteapi.com/v3/categories/?token=EGCNBKQRZWJAAPOFDFVJ&"
 
         doAsync {
+            val categories: ArrayList<Category> = ArrayList()
             val requestQueue = Volley.newRequestQueue(activity)
-            val objectRequest = JsonObjectRequest(Request.Method.GET, url,
-                null, com.android.volley.Response.Listener<JSONObject> { response ->
-                    val name = response?.getString("name")
-                    val id = response?.getString("id")
-                    category = Category(
-                       id.toString(), name.toString()
-                    )
-                    mAdapter.addCategory(category)
-
-                }, com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+            val objectRequest = JsonObjectRequest(Request.Method.GET,
+                url,
+                null,
+                com.android.volley.Response.Listener<JSONObject> { response ->
+                    val jsonArray = response?.getJSONArray("categories")
+                    for (i in 0..(jsonArray!!.length() - 1)) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        val category = Category(
+                            jsonObject!!.getString("id"),
+                            jsonObject.getString("name")
+                        )
+                        categories.add(category)
+                        for(i in categories) {
+                            if(i.id == id) {
+                                mAdapter.addCategory(i)
+                            }
+                        }
+                    }
+                },
+                com.android.volley.Response.ErrorListener {
+                    Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show()
+                })
             requestQueue.add(objectRequest)
         }
-
 
      }
 }

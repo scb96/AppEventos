@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".fragments.AboutFragment">
+
+
+    <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/tb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </android.support.design.widget.AppBarLayout>
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView4" tools:text="Info"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent" android:textSize="18sp"
+                android:textStyle="bold" android:text="@string/info"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView5"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" tools:text="Name: " android:text="@string/name"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="19dp"
+                android:id="@+id/tvName" app:layout_constraintStart_toEndOf="@+id/textView5"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" tools:text="AppEventos"
+                android:text="@string/app_name"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView7"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textView5"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp" tools:text="Version: "
+                android:text="@string/version"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvVersion" app:layout_constraintStart_toEndOf="@+id/textView7"
+                android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvName" tools:text="1.0" android:text="@string/version_num"/>
+        <View
+                android:id="@+id/divider2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"
+                android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView10" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/divider2" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" tools:text="Authors" android:textSize="18sp" android:textStyle="bold"
+                android:text="@string/authors"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvAlvaro" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" tools:text="Álvaro bla bla" android:text="@string/alvaro"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvMarc" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvAlvaro" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" tools:text="Marc bla bla" android:text="@string/marc"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvSamu" android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvMarc" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                tools:text="Samuel Calvo Ballestero" android:text="@string/samu"/>
+        <View
+                android:id="@+id/divider3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@+id/tvSamu"
+                android:layout_marginTop="8dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvApi" app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp" android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" tools:text="Data provided by EventBrite  "
+                android:drawableEnd="@drawable/ic_eventbrite" android:text="@string/eventBrite"/>
+        <ImageView
+                android:src="@drawable/common_google_signin_btn_icon_disabled"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:id="@+id/ivLogo" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/divider3"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/tvApi"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>
+
+</layout>

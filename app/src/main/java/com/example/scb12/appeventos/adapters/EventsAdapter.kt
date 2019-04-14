@@ -54,7 +54,8 @@ class EventsAdapter(
         rowItemsCopy.clear()
         val start = 0
         val count = itemCount
-        notifyItemRangeRemoved(start, count)
+        notifyDataSetChanged()
+        //notifyItemRangeRemoved(start, count)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {

@@ -1,6 +1,7 @@
 package com.example.scb12.appeventos.fragments
 
 
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.graphics.BitmapFactory
@@ -8,8 +9,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.text.method.ScrollingMovementMethod
 import android.view.*
+import android.widget.Button
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -22,8 +25,19 @@ import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.databinding.FragmentEventDetailBinding
 import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.entities.Location
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.dialog_map.*
+import kotlinx.android.synthetic.main.dialog_map.view.*
+import kotlinx.android.synthetic.main.fragment_event_detail.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.UI
 import org.jetbrains.anko.support.v4.find
@@ -41,7 +55,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class EventDetailFragment : Fragment() {
+class EventDetailFragment : Fragment(), OnMapReadyCallback {
 
     lateinit var binding: FragmentEventDetailBinding private set
     lateinit var activity: MainActivity private set
@@ -52,6 +66,8 @@ class EventDetailFragment : Fragment() {
     private lateinit var locationUrl: String
     private lateinit var location: Location
     private lateinit var menu: Menu
+    private lateinit var mapView: MapView
+    private lateinit var googleMap: GoogleMap
 
         companion object {
         fun newInstance(param1: String) =
@@ -65,7 +81,16 @@ class EventDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        val gson = Gson()
+        activity = getActivity() as MainActivity
+        eventGson = arguments!!.getString(ARG_PARAM1)!!
+        event = gson.fromJson(eventGson, Event::class.java)
+        locationUrl = "https://www.eventbriteapi.com/v3/venues/" + event.venueId + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
+
+        loadLocation()
+
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,16 +98,21 @@ class EventDetailFragment : Fragment() {
         compositeDisposable = CompositeDisposable()
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_event_detail, container, false)
         activity = getActivity() as MainActivity
-
-
-        eventGson = arguments!!.getString(ARG_PARAM1)!!
-
-        val gson = Gson()
-        event = gson.fromJson(eventGson, Event::class.java)
-        locationUrl = "https://www.eventbriteapi.com/v3/venues/" + event.venueId + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
-        loadLocation()
         loadImage(event.logoUrl)
+        val dialogView = layoutInflater.inflate(R.layout.dialog_map, null)
 
+        mapView = dialogView.findViewById(R.id.map)
+        mapView.getMapAsync(this)
+
+        binding.bMap.setOnClickListener {
+            val builder = AlertDialog.Builder(activity)
+            builder.setPositiveButton("OK") { dialog, _ ->
+                dialog.cancel()
+            }
+            builder.setView(dialogView)
+            val dialog = builder.create()
+            dialog.show()
+        }
 
         //BINDINGS
 
@@ -100,11 +130,6 @@ class EventDetailFragment : Fragment() {
         binding.tvLocation.append(location.country)
 
         binding.tvAddress.text = location.address*/
-
-
-
-
-
 
         activity.setTitle(R.string.events)
 
@@ -124,11 +149,15 @@ class EventDetailFragment : Fragment() {
         return binding.root
     }
 
+    override fun onMapReady(p0: GoogleMap) {
+        googleMap = p0
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(0.0, 0.0)))
+    }
+
     override fun onStart() {
         super.onStart()
         activity.binding.nv.menu.findItem(R.id.nav_events).isChecked = true
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

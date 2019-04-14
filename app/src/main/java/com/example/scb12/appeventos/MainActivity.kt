@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatDelegate
 import com.example.scb12.appeventos.activities.LoginActivity
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
+import com.example.scb12.appeventos.fragments.AboutFragment
 import com.example.scb12.appeventos.fragments.EventsFragment
+import com.example.scb12.appeventos.fragments.SettingsFragment
 import kotlinx.android.synthetic.main.activity_main_nav_header.*
 
 class MainActivity : AppCompatActivity() {
@@ -41,17 +43,21 @@ class MainActivity : AppCompatActivity() {
         EventsFragment.newInstance(EventsFragment.Companion.EventsType.Events)
     }
 
-    /* private val eventsFragment: FavsFragment by lazy {
+    /* private val favsFragment: FavsFragment by lazy {
         FavsFragment.newInstance(FavsFragment.Companion.FavsType.Favs)
     }*/
 
-    /* private val eventsFragment: MyEventsFragment by lazy {
+    /* private val myEventsFragment: MyEventsFragment by lazy {
         MyEventsFragment.newInstance(MyEventsFragment.Companion.MyEventsType.MyEvents)
     }*/
 
-    /* private val eventsFragment: AboutFragment by lazy {
+    private val settingsFragment: SettingsFragment by lazy {
+        SettingsFragment.newInstance(SettingsFragment.Companion.SettingsType.Settings)
+    }
+
+     private val aboutFragment: AboutFragment by lazy {
         AboutFragment.newInstance(AboutFragment.Companion.AboutType.About)
-    }*/
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,11 +129,19 @@ class MainActivity : AppCompatActivity() {
                    } true
                }*/
 
-              /* R.id.nav_favs -> {
+               R.id.nav_settings -> {
+                   if (currentDrawerItemID != ACTION_SETTINGS) {
+                   loadFragment(ACTION_SETTINGS)
+               }
+               true
+               }
+
+               R.id.nav_about -> {
                    if (currentDrawerItemID != ACTION_ABOUT) {
                        loadFragment(ACTION_ABOUT)
-                   } true
-               }*/
+                   }
+                   true
+               }
            else -> { true }
            }
         }
@@ -136,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         val lastName = intent.extras?.getString("LASTNAME")
         val username = intent.extras?.getString("USERNAME")
 
-        navHeader.name.setText("$name $lastName")
+        navHeader.name.text = "$name $lastName"
         navHeader.username.text = username
 
         navHeader.closeSession.setOnClickListener {
@@ -150,6 +164,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
+            currentDrawerItemID = ACTION_EVENTS
             loadFragment(ACTION_EVENTS)
         }
     }
@@ -184,12 +199,19 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }*/
 
-           /* ACTION_ABOUT -> {
+            ACTION_SETTINGS -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, aboutFragment, R.string.about)
+                    .replace(R.id.clMain, settingsFragment, getString(R.string.settings))
                     .commit()
-            }*/
+            }
+
+            ACTION_ABOUT -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.clMain, aboutFragment, getString(R.string.about))
+                    .commit()
+            }
         }
     }
 

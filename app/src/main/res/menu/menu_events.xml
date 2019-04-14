@@ -13,6 +13,139 @@
         android:icon="@drawable/ic_filter"
         android:title="@string/filter_menu"
         android:orderInCategory="200"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/filter_culture"
+                android:title="@string/culture">
+                  <menu>
+                      <item
+                      android:id="@+id/filter_community"
+                      android:title="@string/community"/>
+
+                      <item
+                              android:id="@+id/filter_arts"
+                              android:title="@string/arts"/>
+
+                      <item
+                              android:id="@+id/filter_science"
+                              android:title="@string/science"/>
+
+                      <item
+                              android:id="@+id/filter_film"
+                              android:title="@string/film"/>
+                  </menu>
+            </item>
+            <item
+                android:id="@+id/filter_free_time"
+                android:title="@string/free_time">
+                <menu>
+                    <item
+                        android:id="@+id/filter_music"
+                        android:title="@string/music" />
+
+                    <item
+                            android:id="@+id/filter_food"
+                            android:title="@string/food" />
+
+                    <item
+                            android:id="@+id/filter_hobbies"
+                            android:title="@string/hobbies" />
+                </menu>
+            </item>
+            <item
+                android:id="@+id/filter_healthy"
+                android:title="@string/health">
+                <menu>
+                    <item
+                        android:id="@+id/filter_sports"
+                        android:title="@string/sports" />
+
+                    <item
+                            android:id="@+id/filter_health"
+                            android:title="@string/health" />
+
+                    <item
+                            android:id="@+id/filter_home"
+                            android:title="@string/home" />
+
+                    <item
+                            android:id="@+id/filter_fashion"
+                            android:title="@string/fashion" />
+                </menu>
+            </item>
+
+            <item
+                android:id="@+id/filter_travels"
+                android:title="@string/travel">
+                <menu>
+                    <item
+                        android:id="@+id/filter_holiday"
+                        android:title="@string/holiday" />
+
+                    <item
+                            android:id="@+id/filter_travel"
+                            android:title="@string/travel_outdoor" />
+
+                    <item
+                            android:id="@+id/filter_auto"
+                            android:title="@string/auto" />
+                </menu>
+            </item>
+
+            <item
+                    android:id="@+id/filter_education"
+                    android:title="@string/education">
+                <menu>
+                    <item
+                            android:id="@+id/filter_family"
+                            android:title="@string/family" />
+
+                    <item
+                            android:id="@+id/filter_school"
+                            android:title="@string/school" />
+                </menu>
+            </item>
+
+            <item
+                    android:id="@+id/filter_spirit"
+                    android:title="@string/spirit">
+                <menu>
+                    <item
+                            android:id="@+id/filter_charity"
+                            android:title="@string/charity" />
+
+                    <item
+                            android:id="@+id/filter_spirituality"
+                            android:title="@string/spirit" />
+
+                </menu>
+            </item>
+
+            <item
+                    android:id="@+id/filter_others"
+                    android:title="@string/others">
+                <menu>
+                    <item
+                            android:id="@+id/filter_business"
+                            android:title="@string/business" />
+
+                    <item
+                            android:id="@+id/filter_government"
+                            android:title="@string/government" />
+
+                    <item
+                            android:id="@+id/filter_other"
+                            android:title="@string/other" />
+                </menu>
+            </item>
+
+        </menu>
+
+
+
+
+    </item>
+
 
 </menu>

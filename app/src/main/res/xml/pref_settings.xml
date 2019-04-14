@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <PreferenceScreen
+            xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+    android:title="Security">
+        <EditTextPreference
+            android:key="pass"
+            android:title="Change Password"
+            android:hint="New Password"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Language">
+        <ListPreference
+            android:key="lang"
+            android:title="Language"
+            android:summary="Select the language of application"
+            android:entries="@array/languages"
+            android:entryValues="@array/languages" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

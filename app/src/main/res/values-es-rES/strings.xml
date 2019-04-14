@@ -64,4 +64,5 @@
     <string name="old_p">Contraseña actual</string>
     <string name="new_p">Contraseña nueva</string>
     <string name="confirm_p">Confirmar contraseña</string>
+    <string name="sure">¿Seguro que deseas eliminar este evento?</string>
 </resources>

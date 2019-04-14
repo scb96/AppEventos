@@ -16,6 +16,8 @@ import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.adapters.MyEventsAdapter
 import com.example.scb12.appeventos.databinding.FragmentMyEventsBinding
 import com.example.scb12.appeventos.entities.Event
+import kotlinx.android.synthetic.main.dialog_new_event.*
+import kotlinx.android.synthetic.main.dialog_new_event.view.*
 import kotlinx.android.synthetic.main.fragment_my_events.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -45,6 +47,10 @@ class MyEventsFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private var name: String = ""
+    private var startDate: String = ""
+    private var finishDate: String = ""
+    private var location: String = ""
+    private var isFree: String = "false"
     private lateinit var drawerToggle: ActionBarDrawerToggle
     lateinit var activity: MainActivity private set
     lateinit var binding: FragmentMyEventsBinding private set
@@ -60,14 +66,7 @@ class MyEventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         activity = getActivity() as MainActivity
-        fabAdd.setOnClickListener {
-            val dialogView = layoutInflater.inflate(R.layout.dialog_new_event, null)
-            val builder = AlertDialog.Builder(activity)
-                .setView(dialogView)
-                .setPositiveButton("OK") { _, _ ->
 
-                }
-        }
     }
 
     override fun onCreateView(
@@ -78,6 +77,31 @@ class MyEventsFragment : Fragment(), SearchView.OnQueryTextListener {
         binding = FragmentMyEventsBinding.inflate(inflater, container, false)
         mAdapter.addItems(myEventsList)
         binding.rv.adapter = mAdapter
+
+        binding.fabAdd.setOnClickListener {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_new_event, null)
+            val builder = AlertDialog.Builder(activity)
+                .setView(dialogView)
+                .setPositiveButton("OK") { dialog, _ ->
+                    name = dialogView.etName.text.toString()
+                    startDate = dialogView.etDateIni.text.toString()
+                    finishDate = dialogView.etDateFin.text.toString()
+                    location = dialogView.etLocation.text.toString()
+                    isFree = if(dialogView.cbFree.isChecked) {
+                        "true"
+                    } else "false"
+                    val event = Event("", name, startDate, finishDate, "", "", "", "", "", isFree, "", false)
+                    myEventsList.add(event)
+                    mAdapter.addItems(myEventsList)
+
+                }
+                .setNegativeButton("Cancel") {dialog, _ ->
+                    dialog.cancel()
+                }
+
+            val dialog = builder.create()
+            dialog.show()
+        }
         return binding.root
     }
 

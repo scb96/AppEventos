@@ -140,12 +140,13 @@ class MainActivity : AppCompatActivity() {
                    true
                }
 
-              /* R.id.nav_my_events -> {
+               R.id.nav_my_events -> {
                    if (currentDrawerItemID != ACTION_MY_EVENTS) {
                        loadFragment(ACTION_MY_EVENTS)
                        binding.dl.closeDrawer(nv)
-                   } true
-               }*/
+                   }
+                   true
+               }
 
                 R.id.nav_settings -> {
                    if (currentDrawerItemID != ACTION_SETTINGS) {
@@ -213,12 +214,12 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
 
-           /* ACTION_MY_EVENTS -> {
+            ACTION_MY_EVENTS -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, myEventsFragment, R.string.my_events)
+                    .replace(R.id.clMain, myEventsFragment, getString(R.string.my_events))
                     .commit()
-            }*/
+            }
 
             ACTION_SETTINGS -> {
                 supportFragmentManager

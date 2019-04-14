@@ -1,11 +1,17 @@
 package com.example.scb12.appeventos.adapters
 
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.AlertDialogLayout
 import android.support.v7.widget.RecyclerView
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.databinding.EventRowBinding
 import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.fragments.MyEventsFragment
+import org.jetbrains.anko.onLongClick
 
 class MyEventsAdapter(
     val fragment: MyEventsFragment,
@@ -24,6 +30,11 @@ class MyEventsAdapter(
     fun addItems(rowItems: ArrayList<Event>) {
         this.rowItems.addAll(rowItems)
         this.rowItemsCopy.addAll(rowItems)
+    }
+
+    fun addItem(event: Event) {
+        this.rowItems.add(event)
+        this.rowItemsCopy.add(event)
     }
 
     fun clear() {
@@ -46,8 +57,45 @@ class MyEventsAdapter(
         //return EventViewHolder(LayoutInflater.from(fragment.context).inflate(R.layout.event_row, parent, false))
     }
 
-    override fun onBindViewHolder(p0: EventViewHolder, p1: Int) {
+    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+        val position = holder.adapterPosition
+        val holder = holder
+        val event = items[position]
+        val binding = holder.binding
 
+        binding.tvName.text = event.name
+        binding.tvName.movementMethod = ScrollingMovementMethod()
+
+        //val date = event.startDate.substring(0, event.startDate.length - 10)//.replace("T", "  ")
+
+        binding.tvDate.text = event.startDate
+
+        if (event.isFree == "true") {
+            binding.ivFree.visibility = View.VISIBLE
+        } else {
+            binding.ivFree.visibility = View.GONE
+        }
+
+        binding.bFav.isChecked = event.isFav
+
+        binding.root.setOnLongClickListener {
+            val clickedPosition = holder.adapterPosition
+            val clickedItem= items[clickedPosition]
+
+            val builder = AlertDialog.Builder(fragment.activity)
+                .setPositiveButton("YES") {_, _ ->
+                    items.remove(clickedItem)
+                    notifyDataSetChanged()
+                }
+                .setNegativeButton("NO") {dialog, _ ->
+                    dialog.cancel()
+                }
+                .setMessage(R.string.sure)
+
+            val dialog = builder.create()
+            dialog.show()
+            true
+        }
     }
 
     fun filter(text: String) {

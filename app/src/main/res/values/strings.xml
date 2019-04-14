@@ -108,4 +108,6 @@
     <string name="new_p">New Password</string>
     <string name="confirm_p">Confirm Password</string>
 
+    <string name="sure">Are you sure to delete this event?</string>
+
 </resources>

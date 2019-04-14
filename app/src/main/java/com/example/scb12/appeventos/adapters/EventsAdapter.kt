@@ -99,8 +99,8 @@ class EventsAdapter(
 //            holder.tvGenre.setBackgroundColor(Color.RED)
             //holder.tvGenre.backgroundColor = Color.RED
 
-        event.isFav = binding.bFav.isChecked
-
+//        event.isFav = binding.bFav.isChecked
+        binding.bFav.isChecked = event.isFav
 //        if(event.isFav){
 //            binding.bFav.isChecked = true
 //        }
@@ -111,13 +111,9 @@ class EventsAdapter(
         binding.bFav.setOnClickListener {
             if(binding.bFav.isChecked) {
                 event.isFav = true
-                println("VOY A AÑADIR A FAVS EL EVENTO:")
-                println(event.name)
                 fragment.addFav(event)
 
             } else {
-                println("VOY A BORRAR DE FAVS EL EVENTO:")
-                println(event.name)
                 event.isFav = false
                 fragment.removeFav(event)
             }

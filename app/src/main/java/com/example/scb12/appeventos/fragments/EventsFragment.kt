@@ -292,24 +292,10 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
      }
 
     fun addFav(event: Event){
-        val id = event.id
-        var index = 0
-        for (ev: Event in eventList){
-            if(id == ev.id)
-                index = eventList.indexOf(ev)
-                eventList[index] = event
-        }
         activity.addFav(event)
     }
 
     fun removeFav(event: Event){
-        val id = event.id
-        var index = 0
-        for(ev: Event in favList){
-            if(id == ev.id)
-                index = favList.indexOf(ev)
-                favList[index] = event
-        }
         activity.removeFav(event)
     }
 }

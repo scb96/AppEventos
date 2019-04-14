@@ -90,17 +90,18 @@ class FavsAdapter(
 //            holder.tvGenre.setBackgroundColor(Color.RED)
         //holder.tvGenre.backgroundColor = Color.RED
 
-        event.isFav = binding.bFav.isChecked
-
+//        event.isFav = binding.bFav.isChecked
+        binding.bFav.isChecked = event.isFav
         binding.bFav.setOnClickListener {
             if(binding.bFav.isChecked) {
-                event.isFav = false
-                // TODO: SE BORRA DE FAVORITOS
-
-            } else {
                 event.isFav = true
+            } else {
+                event.isFav = false
+                fragment.removeFav(event)
+                notifyDataSetChanged()
             }
         }
+
 
         loadImage(event.logoUrl, binding.ivEvent)
         fragment.getCategory(event.categoryId)

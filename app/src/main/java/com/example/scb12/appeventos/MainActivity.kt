@@ -130,6 +130,7 @@ class MainActivity : AppCompatActivity() {
                R.id.nav_events -> {
                    if (currentDrawerItemID != ACTION_EVENTS) {
                        loadFragment(ACTION_EVENTS)
+                       binding.dl.closeDrawer(nv)
                    }
                    true
                }
@@ -137,6 +138,7 @@ class MainActivity : AppCompatActivity() {
                R.id.nav_favs -> {
                    if (currentDrawerItemID != ACTION_FAVS) {
                        loadFragment(ACTION_FAVS)
+                       binding.dl.closeDrawer(nv)
                    }
                    true
                }
@@ -144,12 +146,14 @@ class MainActivity : AppCompatActivity() {
               /* R.id.nav_my_events -> {
                    if (currentDrawerItemID != ACTION_MY_EVENTS) {
                        loadFragment(ACTION_MY_EVENTS)
+                       binding.dl.closeDrawer(nv)
                    } true
                }*/
 
                 R.id.nav_settings -> {
                    if (currentDrawerItemID != ACTION_SETTINGS) {
                        loadFragment(ACTION_SETTINGS)
+                       binding.dl.closeDrawer(nv)
                    }
                     true
                }
@@ -157,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                R.id.nav_about -> {
                    if (currentDrawerItemID != ACTION_ABOUT) {
                        loadFragment(ACTION_ABOUT)
+                       binding.dl.closeDrawer(nv)
                    }
                    true
                }

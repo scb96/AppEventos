@@ -163,7 +163,7 @@ class FavsFragment : Fragment(), SearchView.OnQueryTextListener {
 //    }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_events, menu)
+        inflater?.inflate(R.menu.menu_favs, menu)
         val searchItem = menu?.findItem(R.id.search_events)
         val searchView = searchItem?.actionView as SearchView
         searchView.setOnQueryTextListener(this)
@@ -198,9 +198,10 @@ class FavsFragment : Fragment(), SearchView.OnQueryTextListener {
                     )
                     mAdapter.addCategory(category)
 
-                }, Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+                }, Response.ErrorListener {})
             requestQueue.add(objectRequest)
         }
+
 
 
     }

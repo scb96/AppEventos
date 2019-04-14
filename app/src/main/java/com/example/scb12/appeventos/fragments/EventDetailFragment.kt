@@ -200,7 +200,7 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
 
                 binding.tvAddress.text = location.address
                 binding.tvAddress.movementMethod = ScrollingMovementMethod()
-            }, Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+            }, Response.ErrorListener { })
         requestQueue.add(objectRequest)
 
     }

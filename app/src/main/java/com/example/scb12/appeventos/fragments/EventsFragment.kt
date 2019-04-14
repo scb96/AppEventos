@@ -126,7 +126,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    private fun loadData() {
+   /* private fun loadData() {
         doAsync {
             val requestQueue = Volley.newRequestQueue(activity)
             val objectRequest = JsonObjectRequest(com.android.volley.Request.Method.GET, url,
@@ -155,11 +155,11 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                         }
                     }
                 },
-                com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+                com.android.volley.Response.ErrorListener { })
             requestQueue.add(objectRequest)
 
-        }
-    }
+        }*/
+
 
 
     override fun onCreateView(

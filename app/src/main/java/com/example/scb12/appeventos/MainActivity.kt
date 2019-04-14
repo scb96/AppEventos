@@ -277,7 +277,7 @@ class MainActivity : AppCompatActivity() {
                         uiThread {
                             eventList.add(event)
                             if(saved == null) {
-                                pb.visibility = View.INVISIBLE
+                                pb.visibility = View.GONE
                                 loadFragment(ACTION_EVENTS)
                             }
 //                            mAdapter.addItems(eventList)

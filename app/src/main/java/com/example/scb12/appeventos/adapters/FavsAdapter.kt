@@ -1,37 +1,29 @@
 package com.example.scb12.appeventos.adapters
 
-import android.content.res.Resources
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.provider.Settings.Global.getString
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.android.volley.toolbox.Volley
 import com.example.scb12.appeventos.R
 import com.example.scb12.appeventos.databinding.EventRowBinding
 import com.example.scb12.appeventos.entities.Category
 import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.fragments.EventDetailFragment
-import com.example.scb12.appeventos.fragments.EventsFragment
+import com.example.scb12.appeventos.fragments.FavsFragment
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.event_row.view.*
-import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.collections.ArrayList
 
 
-class EventsAdapter(
-    val fragment: EventsFragment,
+class FavsAdapter(
+    val fragment: FavsFragment,
     var items: ArrayList<Event>
-) : RecyclerView.Adapter<EventViewHolder>() {
+) : RecyclerView.Adapter<FavViewHolder>() {
 
     var rowItems: ArrayList<Event> = ArrayList()
     var rowItemsCopy: ArrayList<Event> = ArrayList(
@@ -54,24 +46,23 @@ class EventsAdapter(
         rowItemsCopy.clear()
         val start = 0
         val count = itemCount
-        notifyDataSetChanged()
-        //notifyItemRangeRemoved(start, count)
+        notifyItemRangeRemoved(start, count)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = EventRowBinding.inflate(
             inflater,
             parent,
             false
         )
-        return EventViewHolder(binding)
-        //return EventViewHolder(LayoutInflater.from(fragment.context).inflate(R.layout.event_row, parent, false))
+        return FavViewHolder(binding)
+        //return FavViewHolder(LayoutInflater.from(fragment.context).inflate(R.layout.event_row, parent, false))
     }
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavViewHolder, position: Int) {
         val position = holder.adapterPosition
-        val holder = holder as EventViewHolder
+        val holder = holder as FavViewHolder
         val event = items[position]
         val binding = holder.binding
         //holder.tvName.text = items[position]
@@ -93,33 +84,21 @@ class EventsAdapter(
             binding.ivFree.visibility = View.GONE
         }
 
-            // binding.tvGenre.text = ""
-            /*   holder.tvGenre.text = "NOT FREE"//Resources.getSystem().getString(R.string.not_free)
-            holder.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.not_free)*/
+        // binding.tvGenre.text = ""
+        /*   holder.tvGenre.text = "NOT FREE"//Resources.getSystem().getString(R.string.not_free)
+        holder.tvGenre.background = ContextCompat.getDrawable(fragment.activity, R.drawable.not_free)*/
 //            holder.tvGenre.setBackgroundColor(Color.RED)
-            //holder.tvGenre.backgroundColor = Color.RED
+        //holder.tvGenre.backgroundColor = Color.RED
 
         event.isFav = binding.bFav.isChecked
 
-//        if(event.isFav){
-//            binding.bFav.isChecked = true
-//        }
-//        else{
-//            binding.bFav.isChecked = false
-//        }
-
         binding.bFav.setOnClickListener {
             if(binding.bFav.isChecked) {
-                event.isFav = true
-                println("VOY A AÑADIR A FAVS EL EVENTO:")
-                println(event.name)
-                fragment.addFav(event)
+                event.isFav = false
+                // TODO: SE BORRA DE FAVORITOS
 
             } else {
-                println("VOY A BORRAR DE FAVS EL EVENTO:")
-                println(event.name)
-                event.isFav = false
-                fragment.removeFav(event)
+                event.isFav = true
             }
         }
 
@@ -194,5 +173,5 @@ class EventsAdapter(
     }
 }
 
-class EventViewHolder(val binding: EventRowBinding) : RecyclerView.ViewHolder(binding.root)
+class FavViewHolder(val binding: EventRowBinding) : RecyclerView.ViewHolder(binding.root)
 

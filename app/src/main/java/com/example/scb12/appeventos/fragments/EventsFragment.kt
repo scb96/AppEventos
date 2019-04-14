@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.provider.Contacts
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.*
 import android.text.TextUtils.indexOf
 import android.view.*
@@ -49,6 +48,7 @@ import java.net.URL
 import java.util.concurrent.Executors
 import com.android.volley.*
 import com.example.scb12.appeventos.entities.Category
+import kotlinx.android.synthetic.main.event_row.*
 import org.jetbrains.anko.support.v4.uiThread
 
 // TODO: Rename parameter arguments, choose names that match
@@ -69,10 +69,14 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
 
         private const val TYPE = "type"
 
-        fun newInstance(activityType: EventsFragment.Companion.EventsType) =
+        fun newInstance(activityType: EventsFragment.Companion.EventsType,
+                        param1: ArrayList<Event>,
+                        param2:ArrayList<Event>) =
                 EventsFragment().apply {
                     arguments = Bundle().apply {
                         putString(EventsFragment.TYPE, activityType.name)
+                        putSerializable("eventList", param1)
+                        putSerializable("favList", param2)
                     }
                 }
     }
@@ -87,12 +91,13 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
 
     val items: ArrayList<String> = ArrayList()
     val jsonItems: ArrayList<String> = ArrayList()
-    val eventList: ArrayList<Event> = ArrayList()
+    var eventList: ArrayList<Event> = ArrayList()
+    var favList: ArrayList<Event> = ArrayList()
 
 
     private val url = "https://www.eventbriteapi.com/v3/events/search/?search_type=name&token=EGCNBKQRZWJAAPOFDFVJ&" /*"https://api.songkick.com/api/3.0/events/37063834.json?apikey=jWEZBlabQchuiZTC"*/
 
-     val mAdapter: EventsAdapter by lazy{
+    val mAdapter: EventsAdapter by lazy{
         EventsAdapter(this, eventList)
     }
 
@@ -100,7 +105,24 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         activity = getActivity() as MainActivity
+        val bundle: Bundle? = arguments
+        if(bundle != null){
+            eventList = bundle.getSerializable("eventList") as ArrayList<Event>
+            favList = bundle.getSerializable("favList") as ArrayList<Event>
 
+        }
+        assignFavs()
+
+    }
+
+    private fun assignFavs(){
+        for (event: Event in favList){
+            val index = eventList.indexOf(event)
+            if(index >= 0){
+                eventList[index].isFav = true
+
+            }
+        }
     }
 
     private fun loadData() {
@@ -125,52 +147,18 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                             jsonObject.getJSONObject("description").getString("text"),
                             false
                         )
-
-                        eventList.add(event)
                         uiThread {
+                            eventList.add(event)
                             mAdapter.addItems(eventList)
-                            binding.rv.adapter = mAdapter
+                            rv.adapter = mAdapter
                         }
                     }
                 },
-                com.android.volley.Response.ErrorListener {})
+                com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
             requestQueue.add(objectRequest)
 
         }
     }
-
-       /* val queue: RequestQueue = Volley.newRequestQueue(activity)
-//        val stringRequest = StringRequest(com.android.volley.Request.Method.GET, url)
-         val stringRequest = StringRequest(url, object : com.android.volley.Response.Listener<String> {
-                override fun onResponse(response: String?) {
-                    val jsonObject = JSONObject(response)
-                    val jsonArray: JSONArray = jsonObject.getJSONArray("events")
-                    for(i in 0..(jsonArray.length() - 1)) {
-                        val jo: JSONObject = jsonArray.getJSONObject(i)
-                        val event = Event(jo.getString("id"), jo.getString("displayName"), "")
-                        eventList.add(event)
-                    }
-                }
-            }, object : com.android.volley.Response.ErrorListener {
-                 override fun onErrorResponse(error: VolleyError?) {
-
-                 }
-             })
-    }*/
-
-    /*fun run(url: String) {
-        val request = okhttp3.Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : okhttp3.Callback {
-            override fun onFailure(call: okhttp3.Call, e: IOException) { }
-            override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                println(response.body()?.string()?.split(","))
-            }
-        })
-    }*/
-
 
 
     override fun onCreateView(
@@ -188,9 +176,11 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         activity.binding.abl.visibility = View.GONE
         activity.binding.nsv.visibility = View.GONE
         activity.setTitle(R.string.events)
-
-
-
+        println("PRIMER LOGGGGGGGGGGGGGGGGGGGGGGGG")
+//        loadData()
+        println("SEGUNDO LOGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+        mAdapter.addItems(eventList)
+        rv.adapter = mAdapter
         arguments?.let {
             eventsType = EventsType.valueOf(it.getString(TYPE)!!)
         }
@@ -206,12 +196,13 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
             binding.tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         activity.binding.dl.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
-
+        println("TERCER LOGGGGGGGGGGGGGG")
         val mLayoutManager = LinearLayoutManager(context)
 
         binding.rv.layoutManager = mLayoutManager
         binding.rv.itemAnimator = DefaultItemAnimator()
-
+        binding.rv.adapter = mAdapter
+        println("CUARRTO LOGGGGGGGGGGGG")
         //rv.addItemDecoration(DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL))
 
       //  rellenar()
@@ -221,13 +212,10 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                 binding.srl.isRefreshing = false
             }
         }
-        binding.rv.adapter = mAdapter
-        loadData()
 
-
-        /* if(mAdapter.rowItemCount == 0) {
-             rellenar()
-         }*/
+       /* if(mAdapter.rowItemCount == 0) {
+            rellenar()
+        }*/
 
        // binding.rv.adapter = mAdapter
     }
@@ -243,7 +231,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
             i++
         }*/
         //mAdapter.addItems(items)
-
 
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -266,133 +253,6 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-/*
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        var id = ""
-        when(item!!.itemId) {
-            R.id.filter_community -> {
-                id = "113"
-                loadEvents(id)
-            }
-
-            R.id.filter_arts -> {
-                id = "105"
-                loadEvents(id)
-            }
-
-            R.id.filter_science -> {
-                id = "102"
-                loadEvents(id)
-            }
-
-            R.id.filter_film -> {
-                id = "104"
-                loadEvents(id)
-            }
-
-            R.id.filter_music -> {
-                id = "103"
-                loadEvents(id)
-            }
-
-            R.id.filter_food -> {
-                id = "110"
-                loadEvents(id)
-            }
-
-            R.id.filter_hobbies -> {
-                id = "119"
-                loadEvents(id)
-            }
-
-            R.id.filter_sports -> {
-                id = "108"
-                loadEvents(id)
-            }
-
-            R.id.filter_health -> {
-                id = "107"
-                loadEvents(id)
-            }
-
-            R.id.filter_home -> {
-                id = "117"
-                loadEvents(id)
-            }
-
-            R.id.filter_fashion -> {
-                id = "106"
-                loadEvents(id)
-            }
-
-            R.id.filter_holiday -> {
-                id = "116"
-                loadEvents(id)
-            }
-
-            R.id.filter_travel -> {
-                id = "109"
-                loadEvents(id)
-            }
-
-            R.id.filter_auto -> {
-                id = "118"
-                loadEvents(id)
-            }
-
-            R.id.filter_family-> {
-                id = "115"
-                loadEvents(id)
-            }
-
-            R.id.filter_school -> {
-                id = "120"
-                loadEvents(id)
-            }
-
-            R.id.filter_charity -> {
-                id = "111"
-                loadEvents(id)
-            }
-
-            R.id.filter_spirituality -> {
-                id = "114"
-                loadEvents(id)
-            }
-
-            R.id.filter_business -> {
-                id = "101"
-                loadEvents(id)
-            }
-
-            R.id.filter_government -> {
-                id = "112"
-                loadEvents(id)
-            }
-
-            R.id.filter_other -> {
-                id = "199"
-                loadEvents(id)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-*/
-
-   /* private fun loadEvents(id: String) {
-        mAdapter.clear()
-        val rv = activity.findViewById<RecyclerView>(R.id.rv)
-        val events: ArrayList<Event> = ArrayList()
-        for(i in eventList) {
-            if(i.categoryId == id) {
-                events.add(i)
-            }
-        }
-      //  eventList.clear()
-        mAdapter.addItems(events)
-        mAdapter.notifyDataSetChanged()
-    }*/
-
     override fun onQueryTextSubmit(p0: String?): Boolean {
         if(p0 != null) {
             mAdapter.filter(p0)
@@ -408,35 +268,45 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
      fun getCategory(id: String) {
-        val url = "https://www.eventbriteapi.com/v3/categories/?token=EGCNBKQRZWJAAPOFDFVJ&"
+        val url = "https://www.eventbriteapi.com/v3/categories/" + id + "/?token=EGCNBKQRZWJAAPOFDFVJ&"
 
         doAsync {
-            val categories: ArrayList<Category> = ArrayList()
             val requestQueue = Volley.newRequestQueue(activity)
-            val objectRequest = JsonObjectRequest(Request.Method.GET,
-                url,
-                null,
-                com.android.volley.Response.Listener<JSONObject> { response ->
-                    val jsonArray = response?.getJSONArray("categories")
-                    for (i in 0..(jsonArray!!.length() - 1)) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val category = Category(
-                            jsonObject!!.getString("id"),
-                            jsonObject.getString("name")
-                        )
-                        categories.add(category)
-                        for(i in categories) {
-                            if(i.id == id) {
-                                mAdapter.addCategory(i)
-                            }
-                        }
-                    }
-                },
-                com.android.volley.Response.ErrorListener {
-                    Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show()
-                })
+            val objectRequest = JsonObjectRequest(Request.Method.GET, url,
+                null, com.android.volley.Response.Listener<JSONObject> { response ->
+                    val name = response?.getString("name")
+                    val id = response?.getString("id")
+                    category = Category(
+                       id.toString(), name.toString()
+                    )
+                    mAdapter.addCategory(category)
+
+                }, com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
             requestQueue.add(objectRequest)
         }
 
+
      }
+
+    fun addFav(event: Event){
+        val id = event.id
+        var index = 0
+        for (ev: Event in eventList){
+            if(id == ev.id)
+                index = eventList.indexOf(ev)
+                eventList[index] = event
+        }
+        activity.addFav(event)
+    }
+
+    fun removeFav(event: Event){
+        val id = event.id
+        var index = 0
+        for(ev: Event in favList){
+            if(id == ev.id)
+                index = favList.indexOf(ev)
+                favList[index] = event
+        }
+        activity.removeFav(event)
+    }
 }

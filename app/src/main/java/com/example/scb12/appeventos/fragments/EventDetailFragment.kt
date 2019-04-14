@@ -45,6 +45,7 @@ import org.jetbrains.anko.uiThread
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+//import android.arch.lifecycle
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,6 +69,9 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
     private lateinit var menu: Menu
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
+
+
+    var favsList: ArrayList<Event> = ArrayList()
 
         companion object {
         fun newInstance(param1: String) =
@@ -124,6 +128,10 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
 
         binding.tvStartDate.text = startDate
         binding.tvFinishDate.text = finishDate
+//
+//        val favsFrag = FavsFragment()
+//        var bundle = Bundle()
+//        bundle.putParcelableArrayList("favsList", favsList)
 
         /*binding.tvLocation.text = location.city
         binding.tvLocation.append(", ")
@@ -227,16 +235,24 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
                 favNotChecked.isVisible = false
                 favChecked.isVisible = true
                 event.isFav = true
-                //TODO: AÑADIR A FAVORITOS
+                activity.addFav(event)
             }
 
             R.id.favChecked -> {
                 favChecked.isVisible = false
                 favNotChecked.isVisible = true
                 event.isFav = false
-                //TODO: ELIMINAR DE FAVORITOS
+                activity.removeFav(event)
             }
         }
         return super.onOptionsItemSelected(item)
     }
+
+//    private fun startFavsFragment(){
+//        val listFavsFragment = FavsFragment.newInstance()
+//        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+//        fragmentTransaction.replace(R.id.clMain, listFavsFragment)
+//        fragmentTransaction.addToBackStack(null)
+//        fragmentTransaction.commit()
+//    }
 }

@@ -10,13 +10,22 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.scb12.appeventos.activities.LoginActivity
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
-import com.example.scb12.appeventos.fragments.AboutFragment
+import com.example.scb12.appeventos.entities.Event
 import com.example.scb12.appeventos.fragments.EventsFragment
-import com.example.scb12.appeventos.fragments.SettingsFragment
+import com.example.scb12.appeventos.fragments.FavsFragment
 import kotlinx.android.synthetic.main.activity_main_nav_header.*
+import kotlinx.android.synthetic.main.fragment_events.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,26 +47,25 @@ class MainActivity : AppCompatActivity() {
 
     private var currentDrawerItemID: Int = 0
     private var drawerClickStatus: Boolean = false
+    private val favsList: ArrayList<Event> = ArrayList()
+    private val eventList: ArrayList<Event> = ArrayList()
 
     private val eventsFragment: EventsFragment by lazy {
-        EventsFragment.newInstance(EventsFragment.Companion.EventsType.Events)
+        EventsFragment.newInstance(EventsFragment.Companion.EventsType.Events,
+            eventList, favsList)
     }
 
-    /* private val favsFragment: FavsFragment by lazy {
-        FavsFragment.newInstance(FavsFragment.Companion.FavsType.Favs)
-    }*/
+    private val favsFragment: FavsFragment by lazy {
+        FavsFragment.newInstance(FavsFragment.Companion.FavsType.Favs, favsList)
+    }
 
-    /* private val myEventsFragment: MyEventsFragment by lazy {
+    /* private val eventsFragment: MyEventsFragment by lazy {
         MyEventsFragment.newInstance(MyEventsFragment.Companion.MyEventsType.MyEvents)
     }*/
 
-    private val settingsFragment: SettingsFragment by lazy {
-        SettingsFragment.newInstance(SettingsFragment.Companion.SettingsType.Settings)
-    }
-
-     private val aboutFragment: AboutFragment by lazy {
+    /* private val eventsFragment: AboutFragment by lazy {
         AboutFragment.newInstance(AboutFragment.Companion.AboutType.About)
-    }
+    }*/
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         val editor = prefs.edit()
         editor.putBoolean("LOGIN", true)
         editor.apply()
-
+        loadData()
     }
 
     @SuppressLint("SetTextI18n")
@@ -117,11 +125,12 @@ class MainActivity : AppCompatActivity() {
                    true
                }
 
-               /* R.id.nav_favs -> {
+               R.id.nav_favs -> {
                    if (currentDrawerItemID != ACTION_FAVS) {
                        loadFragment(ACTION_FAVS)
-                   } true
-               }*/
+                   }
+                   true
+               }
 
               /* R.id.nav_my_events -> {
                    if (currentDrawerItemID != ACTION_MY_EVENTS) {
@@ -129,19 +138,11 @@ class MainActivity : AppCompatActivity() {
                    } true
                }*/
 
-               R.id.nav_settings -> {
-                   if (currentDrawerItemID != ACTION_SETTINGS) {
-                   loadFragment(ACTION_SETTINGS)
-               }
-               true
-               }
-
-               R.id.nav_about -> {
+              /* R.id.nav_favs -> {
                    if (currentDrawerItemID != ACTION_ABOUT) {
                        loadFragment(ACTION_ABOUT)
-                   }
-                   true
-               }
+                   } true
+               }*/
            else -> { true }
            }
         }
@@ -150,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         val lastName = intent.extras?.getString("LASTNAME")
         val username = intent.extras?.getString("USERNAME")
 
-        navHeader.name.text = "$name $lastName"
+        navHeader.name.setText("$name $lastName")
         navHeader.username.text = username
 
         navHeader.closeSession.setOnClickListener {
@@ -164,7 +165,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         if(savedInstanceState == null) {
-            currentDrawerItemID = ACTION_EVENTS
             loadFragment(ACTION_EVENTS)
         }
     }
@@ -185,12 +185,12 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }
 
-            /*ACTION_FAVS -> {
+            ACTION_FAVS -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, favsFragment, R.string.favs)
+                    .replace(R.id.clMain, favsFragment, getString(R.string.favs))
                     .commit()
-            }*/
+            }
 
            /* ACTION_MY_EVENTS -> {
                 supportFragmentManager
@@ -199,19 +199,12 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }*/
 
-            ACTION_SETTINGS -> {
+           /* ACTION_ABOUT -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, settingsFragment, getString(R.string.settings))
+                    .replace(R.id.clMain, aboutFragment, R.string.about)
                     .commit()
-            }
-
-            ACTION_ABOUT -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.clMain, aboutFragment, getString(R.string.about))
-                    .commit()
-            }
+            }*/
         }
     }
 
@@ -221,5 +214,52 @@ class MainActivity : AppCompatActivity() {
             fragmentManager.popBackStackImmediate()
         }
     }
+
+    fun addFav(event: Event){
+        favsList.add(event)
+    }
+
+    fun removeFav(event: Event){
+        favsList.remove(event)
+    }
+
+    private fun loadData() {
+        val url = "https://www.eventbriteapi.com/v3/events/search/?search_type=name&token=EGCNBKQRZWJAAPOFDFVJ&" /*"https://api.songkick.com/api/3.0/events/37063834.json?apikey=jWEZBlabQchuiZTC"*/
+
+        doAsync {
+            val requestQueue = Volley.newRequestQueue(this@MainActivity)
+            val objectRequest = JsonObjectRequest(
+                Request.Method.GET, url,
+                null, Response.Listener<JSONObject> { response ->
+                    val jsonArray = response?.getJSONArray("events")
+                    for (i in 0..(jsonArray!!.length() - 1)) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        val event = Event(
+                            jsonObject!!.getString("id"),
+                            jsonObject.getJSONObject("name").getString("text"),
+                            jsonObject.getJSONObject("start").getString("utc"),
+                            jsonObject.getJSONObject("end").getString("utc"),
+                            jsonObject.getString("url"),
+                            jsonObject.getString("logo_id"),
+                            jsonObject.getJSONObject("logo").getString("url"),
+                            jsonObject.getString("venue_id"),
+                            jsonObject.getString("category_id"),
+                            jsonObject.getString("is_free"),
+                            jsonObject.getJSONObject("description").getString("text"),
+                            false
+                        )
+                        uiThread {
+                            eventList.add(event)
+//                            mAdapter.addItems(eventList)
+//                            rv.adapter = mAdapter
+                        }
+                    }
+                },
+                Response.ErrorListener { Toast.makeText(this@MainActivity, "ERROR", Toast.LENGTH_LONG).show() })
+            requestQueue.add(objectRequest)
+
+        }
+    }
+
 }
 

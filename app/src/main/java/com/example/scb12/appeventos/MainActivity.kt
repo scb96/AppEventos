@@ -248,6 +248,7 @@ class MainActivity : AppCompatActivity() {
 
     fun addFav(event: Event){
         favsList.add(event)
+
     }
 
     fun removeFav(event: Event){

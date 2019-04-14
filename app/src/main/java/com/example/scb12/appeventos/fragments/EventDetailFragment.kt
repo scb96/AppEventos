@@ -220,10 +220,12 @@ class EventDetailFragment : Fragment(), OnMapReadyCallback {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.menu_event_detail, menu)
         this.menu = menu!!
-        if(event.isFav) {
-            menu.findItem(R.id.favChecked).isVisible = true
-            menu.findItem(R.id.fav).isVisible = false
-        }
+        menu.findItem(R.id.favChecked).isVisible = false
+        menu.findItem(R.id.fav).isVisible = false
+//        if(event.isFav) {
+//            menu.findItem(R.id.favChecked).isVisible = true
+//            menu.findItem(R.id.fav).isVisible = false
+//        }
         super.onCreateOptionsMenu(menu, inflater)
     }
 

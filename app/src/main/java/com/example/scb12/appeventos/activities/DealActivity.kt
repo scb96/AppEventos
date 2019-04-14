@@ -37,9 +37,11 @@ class DealActivity : AppCompatActivity() {
                     if(log) {
                         val intent = Intent(baseContext, MainActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         val loginIntent = Intent(baseContext, LoginActivity::class.java)
                         startActivity(loginIntent)
+                        finish()
                     }
                 } catch (e: Exception){
                     e.printStackTrace()

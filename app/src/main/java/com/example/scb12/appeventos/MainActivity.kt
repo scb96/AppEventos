@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatDelegate
+import android.view.View
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -19,8 +20,11 @@ import com.example.scb12.appeventos.activities.LoginActivity
 import com.example.scb12.appeventos.core.NavHeaderViewHolder
 import com.example.scb12.appeventos.databinding.ActivityMainBinding
 import com.example.scb12.appeventos.entities.Event
+import com.example.scb12.appeventos.fragments.AboutFragment
 import com.example.scb12.appeventos.fragments.EventsFragment
 import com.example.scb12.appeventos.fragments.FavsFragment
+import com.example.scb12.appeventos.fragments.SettingsFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_nav_header.*
 import kotlinx.android.synthetic.main.fragment_events.*
 import org.jetbrains.anko.doAsync
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding private set
     private lateinit var drawerToggle: ActionBarDrawerToggle
     private lateinit var navHeader: NavHeaderViewHolder
+    private var saved: Bundle? = null
 
     private var currentDrawerItemID: Int = 0
     private var drawerClickStatus: Boolean = false
@@ -63,9 +68,13 @@ class MainActivity : AppCompatActivity() {
         MyEventsFragment.newInstance(MyEventsFragment.Companion.MyEventsType.MyEvents)
     }*/
 
-    /* private val eventsFragment: AboutFragment by lazy {
+    private val settingsFragment: SettingsFragment by lazy {
+        SettingsFragment.newInstance(SettingsFragment.Companion.SettingsType.Settings)
+    }
+
+     private val aboutFragment: AboutFragment by lazy {
         AboutFragment.newInstance(AboutFragment.Companion.AboutType.About)
-    }*/
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         binding.tb.setNavigationOnClickListener {
             binding.dl.openDrawer(GravityCompat.START)
         }
-        setTitle(R.string.app_name)
+        setTitle(R.string.events)
 
         drawerToggle = ActionBarDrawerToggle(
             this, binding.dl, binding.tb,
@@ -138,11 +147,19 @@ class MainActivity : AppCompatActivity() {
                    } true
                }*/
 
-              /* R.id.nav_favs -> {
+                R.id.nav_settings -> {
+                   if (currentDrawerItemID != ACTION_SETTINGS) {
+                       loadFragment(ACTION_SETTINGS)
+                   }
+                    true
+               }
+
+               R.id.nav_about -> {
                    if (currentDrawerItemID != ACTION_ABOUT) {
                        loadFragment(ACTION_ABOUT)
-                   } true
-               }*/
+                   }
+                   true
+               }
            else -> { true }
            }
         }
@@ -164,9 +181,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        if(savedInstanceState == null) {
+        saved = savedInstanceState
+      /*  if(savedInstanceState == null) {
+            loadData()
             loadFragment(ACTION_EVENTS)
-        }
+        }*/
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -199,12 +218,19 @@ class MainActivity : AppCompatActivity() {
                     .commit()
             }*/
 
-           /* ACTION_ABOUT -> {
+            ACTION_SETTINGS -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.clMain, aboutFragment, R.string.about)
+                    .replace(R.id.clMain, settingsFragment, getString(R.string.settings))
                     .commit()
-            }*/
+            }
+
+            ACTION_ABOUT -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.clMain, aboutFragment, getString(R.string.about))
+                    .commit()
+            }
         }
     }
 
@@ -250,12 +276,16 @@ class MainActivity : AppCompatActivity() {
                         )
                         uiThread {
                             eventList.add(event)
+                            if(saved == null) {
+                                pb.visibility = View.INVISIBLE
+                                loadFragment(ACTION_EVENTS)
+                            }
 //                            mAdapter.addItems(eventList)
 //                            rv.adapter = mAdapter
                         }
                     }
                 },
-                Response.ErrorListener { Toast.makeText(this@MainActivity, "ERROR", Toast.LENGTH_LONG).show() })
+                Response.ErrorListener {})
             requestQueue.add(objectRequest)
 
         }

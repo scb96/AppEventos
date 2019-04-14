@@ -113,6 +113,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
         }
         assignFavs()
 
+
     }
 
     private fun assignFavs(){
@@ -167,6 +168,8 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View? {
         setHasOptionsMenu(true)
         binding = FragmentEventsBinding.inflate(inflater, container, false)
+        mAdapter.addItems(eventList)
+        binding.rv.adapter = mAdapter
         return binding.root
     }
 
@@ -281,7 +284,7 @@ class EventsFragment : Fragment(), SearchView.OnQueryTextListener {
                     )
                     mAdapter.addCategory(category)
 
-                }, com.android.volley.Response.ErrorListener { Toast.makeText(activity, "ERROR", Toast.LENGTH_LONG).show() })
+                }, com.android.volley.Response.ErrorListener { })
             requestQueue.add(objectRequest)
         }
 
